@@ -24,13 +24,13 @@ The plugin can be installed via the Cordova command line interface:
 * Run the command:
 
 ```sh
-cordova plugin add com.crypho.plugins.scrypt
+cordova plugin add cordova-plugin-scrypt
 ```
 
 or if you want to be running the development version,
 
 ```sh
-cordova plugin add https://github.com/Crypho/com.crypho.plugins.scrypt.git
+cordova plugin add https://github.com/Crypho/cordova-plugin-scrypt.git
 ```
 
 ##<a name="plugin_api"></a> Plugin API
@@ -67,6 +67,30 @@ The ``salt`` parameter can be a string or an array of uint8. You can provide cus
     dkLen: 32
 }
 ```
+
+## Testing
+
+### Setup
+
+1. Create a cordova app.
+2. Replace ``config.xml`` with the ``testing.config.xml``
+3. Add your platforms.
+4. Add the ``cordova-plugin-test-framework`` plugin:
+
+```
+cordova plugin add http://git-wip-us.apache.org/repos/asf/cordova-plugin-test-framework.git
+```
+
+4. Finally add the scrypt plugin as well as the tests from its location
+
+```
+cordova plugin add PATH_TO_SCRYPT_PLUGIN
+cordova plugin add PATH_TO_SCRYPT_PLUGIN/tests
+```
+
+### Running the tests
+
+Just run the app for all platforms. Remember, if you have changes to test you will need to remove the scrypt plugin and add it again for the changes to be seen by the app.
 
 ##<a name="license"></a> LICENSE
 
