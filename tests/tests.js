@@ -166,6 +166,42 @@ var testCases = [
     "p": 1,
     "dkLen": 64,
     "expected": "6837d88873b164bf5692e878fb0f20bd4a1cdc29f5f48a57e94a298984cbc661cb539e2a868498bee67a7a277d962d06ba1d45325eb1c756ff8f685bbacf585a"
+},
+{
+    "salt": [115, 97, 108, 116],
+    "password": "Hellø",
+    "N": 2,
+    "r": 1,
+    "p": 1,
+    "dkLen": 64,
+    "expected": "6837d88873b164bf5692e878fb0f20bd4a1cdc29f5f48a57e94a298984cbc661cb539e2a868498bee67a7a277d962d06ba1d45325eb1c756ff8f685bbacf585a"
+},
+{
+    "salt": [115, 97, 108, 116],
+    "password": [72, 101, 108, 108, 195, 184],
+    "N": 2,
+    "r": 1,
+    "p": 1,
+    "dkLen": 64,
+    "expected": "6837d88873b164bf5692e878fb0f20bd4a1cdc29f5f48a57e94a298984cbc661cb539e2a868498bee67a7a277d962d06ba1d45325eb1c756ff8f685bbacf585a"
+},
+{
+    "salt": "salt",
+    "password": [72, 101, 108, 108, 195, 184],
+    "N": 2,
+    "r": 1,
+    "p": 1,
+    "dkLen": 64,
+    "expected": "6837d88873b164bf5692e878fb0f20bd4a1cdc29f5f48a57e94a298984cbc661cb539e2a868498bee67a7a277d962d06ba1d45325eb1c756ff8f685bbacf585a"
+},
+{
+    "salt": "🧂",
+    "password": "🤫",
+    "N": 2,
+    "r": 1,
+    "p": 1,
+    "dkLen": 64,
+    "expected": "da79e302d74c384d7d3b3a45d739a54a078c9995a9a4910b05d60303b15eafe191704df3f613b08fdbea8fadd3ea9447b28e9faf068aa02f853daf59224bc79a"
 }
 
 

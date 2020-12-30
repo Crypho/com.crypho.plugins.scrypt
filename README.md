@@ -15,7 +15,7 @@ This plugin is for use with [Cordova](http://incubator.apache.org/cordova/) and 
 - [Plugin API](#plugin-api)
 - [LICENSE](#license)
 
-##<a name="installation"></a>Installation
+## <a name="installation"></a>Installation
 
 Below are the methods for installing this plugin automatically using command line tools. For additional info, take a look at the [Plugman Documentation](https://github.com/apache/cordova-plugman/blob/master/README.md) and [Cordova Plugin Specification](https://github.com/alunny/cordova-plugin-spec).
 
@@ -36,7 +36,7 @@ or if you want to be running the development version,
 cordova plugin add https://github.com/Crypho/cordova-plugin-scrypt.git
 ```
 
-##<a name="plugin_api"></a> Plugin API
+## <a name="plugin_api"></a> Plugin API
 
 Grab the plugin instance variable.
 
@@ -61,7 +61,7 @@ scrypt(
 )
 ```
 
-The ``salt`` parameter can be a string or an array of uint8. You can provide custom ``scrypt`` parameters in the options dict. The defaults are
+The ``password`` or ``salt`` parameters can be a string or an array of uint8. You can provide custom ``scrypt`` parameters in the options dict. The defaults are
 ```js
 {
     N: 16384,
@@ -95,7 +95,7 @@ cordova plugin add PATH_TO_SCRYPT_PLUGIN/tests
 
 Just run the app for all platforms. Remember, if you have changes to test you will need to remove the scrypt plugin and add it again for the changes to be seen by the app.
 
-##<a name="license"></a> LICENSE
+## <a name="license"></a> LICENSE
 
     The MIT License
 
