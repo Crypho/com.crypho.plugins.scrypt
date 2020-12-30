@@ -9,25 +9,44 @@
 
 - (void)scrypt:(CDVInvokedUrlCommand*)command
 {
-
     int i, success;
-    size_t saltLength;
+
     const uint8_t *parsedSalt;
-    uint8_t *buffer = NULL;
-    const char* passphrase = [[command argumentAtIndex:0] UTF8String];
+    const uint8_t *parsedPassphrase;
+
+    size_t passphraseLength;
+    size_t saltLength;
+
+    id passphrase = [command argumentAtIndex:0];
     id salt = [command argumentAtIndex:1];
 
+    uint8_t *passphraseBuffer = NULL;
+    uint8_t *saltBuffer = NULL;
+
+    if ([passphrase isKindOfClass:[NSString class]]) {
+        parsedPassphrase = (uint8_t *)(const char*)[passphrase UTF8String];
+        passphraseLength = strlen(parsedPassphrase);
+    } else if ([passphrase isKindOfClass:[NSArray class]]) {
+        passphraseLength = (int) [passphrase count];
+        passphraseBuffer = malloc(sizeof(uint8_t) * passphraseLength);
+
+        for (i = 0; i < passphraseLength; ++i) {
+            passphraseBuffer[i] = (uint8_t)[[passphrase objectAtIndex:i] integerValue];
+        }
+        parsedPassphrase = passphraseBuffer;
+    }
+
     if ([salt isKindOfClass:[NSString class]]) {
-        parsedSalt = (const uint8_t *)[salt UTF8String];
-        saltLength = (size_t) [salt length];
+        parsedSalt = (uint8_t *)(const char*)[salt UTF8String];
+        saltLength = strlen(parsedSalt);
     } else if ([salt isKindOfClass:[NSArray class]]) {
         saltLength = (int) [salt count];
-        buffer = malloc(sizeof(uint8_t) * saltLength);
+        saltBuffer = malloc(sizeof(uint8_t) * saltLength);
 
         for (i = 0; i < saltLength; ++i) {
-            buffer[i] = (uint8_t)[[salt objectAtIndex:i] integerValue];
+            saltBuffer[i] = (uint8_t)[[salt objectAtIndex:i] integerValue];
         }
-        parsedSalt = buffer;
+        parsedSalt = saltBuffer;
     }
 
     // Parse options
@@ -41,7 +60,7 @@
     self.callbackId = command.callbackId;
 
     @try {
-        success = libscrypt_scrypt((uint8_t *)passphrase, strlen(passphrase), parsedSalt, saltLength, N, r, p, hashbuf, dkLen);
+        success = libscrypt_scrypt(parsedPassphrase, passphraseLength, parsedSalt, saltLength, N, r, p, hashbuf, dkLen);
     }
     @catch (NSException * e) {
         [self failWithMessage: [NSString stringWithFormat:@"%@", e] withError: nil];
@@ -61,7 +80,8 @@
     NSString *result = [NSString stringWithString: hexResult];
     [self successWithMessage: result];
 
-    free(buffer);
+    free(passphraseBuffer);
+    free(saltBuffer);
 }
 
 -(void)successWithMessage:(NSString *)message

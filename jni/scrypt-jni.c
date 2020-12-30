@@ -19,7 +19,7 @@ static void throwException(JNIEnv* env, char *msg);
 
 JNIEXPORT jbyteArray JNICALL
 Java_com_crypho_plugins_ScryptPlugin_scrypt( JNIEnv* env, jobject thiz,
-	jbyteArray pass, jcharArray salt, jobject N, jobject r, jobject p, jobject dkLen)
+	jbyteArray pass, jbyteArray salt, jobject N, jobject r, jobject p, jobject dkLen)
 {
     int i;
     char *msg_error;
@@ -47,17 +47,9 @@ Java_com_crypho_plugins_ScryptPlugin_scrypt( JNIEnv* env, jobject thiz,
         goto END;
     }
 
-    jchar *salt_chars = (*env)->GetCharArrayElements(env, salt, NULL);
+    jbyte *salt_bytes = (*env)->GetByteArrayElements(env, salt, NULL);
     if((*env)->ExceptionOccurred(env)) {
         LOGE("Failed to get salt elements.");
-        goto END;
-    }
-
-    uint8_t *parsedSalt = malloc(sizeof(uint8_t) * saltLen);
-    if (parsedSalt == NULL) {
-        msg_error = "Failed to malloc parsedSalt.";
-        LOGE("%s", msg_error);
-        throwException(env, msg_error);
         goto END;
     }
 
@@ -69,11 +61,7 @@ Java_com_crypho_plugins_ScryptPlugin_scrypt( JNIEnv* env, jobject thiz,
         goto END;
     }
 
-    for (i = 0; i < saltLen; ++i) {
-        parsedSalt[i] = (uint8_t) salt_chars[i];
-    }
-
-    if (libscrypt_scrypt(passphrase, passLen, parsedSalt, saltLen, N_i, r_i, p_i, hashbuf, dkLen_i)) {
+    if (libscrypt_scrypt(passphrase, passLen, salt_bytes, saltLen, N_i, r_i, p_i, hashbuf, dkLen_i)) {
         switch (errno) {
             case EINVAL:
                 msg_error = "N must be a power of 2 greater than 1.";
@@ -103,9 +91,8 @@ Java_com_crypho_plugins_ScryptPlugin_scrypt( JNIEnv* env, jobject thiz,
 
     END:
         if (passphrase) (*env)->ReleaseByteArrayElements(env, pass, passphrase, JNI_ABORT);
-        if (salt_chars) (*env)->ReleaseCharArrayElements(env, salt, salt_chars, JNI_ABORT);
+        if (salt_bytes) (*env)->ReleaseByteArrayElements(env, salt, salt_bytes, JNI_ABORT);
         if (hashbuf) free(hashbuf);
-        if (parsedSalt) free(parsedSalt);
 
     return result;
 }
